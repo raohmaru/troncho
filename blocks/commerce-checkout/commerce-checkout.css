@@ -330,3 +330,17 @@
     margin-top: 0;
   }
 }
+/* PARTNER-PAY payment method */
+.checkout__payment-method-partners-payment .dropin-card--secondary {
+  border: var(--shape-border-width-1) solid var(--color-warning-500);
+}
+
+.checkout__payment-method-partners-payment h3 {
+  font: var(--type-headline-2-strong-font);
+  letter-spacing: var(--type-headline-2-strong-letter-spacing);
+}
+
+.checkout__payment-method-partners-payment--message {
+  color: var(--color-warning-500);
+  font-weight: 700;
+}
