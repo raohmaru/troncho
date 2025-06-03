@@ -1,23 +1,23 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint import/no-cycle: [2, { maxDepth: 1 }] */
 
-import { initializers } from '@dropins/tools/initializer.js';
-import { Image, provider as UI } from '@dropins/tools/components.js';
+import { initializers } from "@dropins/tools/initializer.js";
+import { Image, provider as UI } from "@dropins/tools/components.js";
 import {
   initialize,
   setEndpoint,
   setFetchGraphQlHeaders,
   fetchProductData,
-} from '@dropins/storefront-pdp/api.js';
-import { initializeDropin } from './index.js';
+} from "@dropins/storefront-pdp/api.js";
+import { initializeDropin } from "./index.js";
 import {
   commerceEndpointWithQueryParams,
   getOptionsUIDsFromUrl,
   getSkuFromUrl,
   loadErrorPage,
-} from '../commerce.js';
-import { getHeaders } from '../configs.js';
-import { fetchPlaceholders } from '../aem.js';
+} from "../commerce.js";
+import { getHeaders } from "../configs.js";
+import { fetchPlaceholders } from "../aem.js";
 
 export const IMAGES_SIZES = {
   width: 960,
@@ -30,15 +30,17 @@ await initializeDropin(async () => {
 
   // Set Fetch Headers (Service)
   setFetchGraphQlHeaders({
-    ...(await getHeaders('cs')),
-    'Content-Type': 'application/json',
+    ...(await getHeaders("cs")),
+    "Content-Type": "application/json",
   });
 
   const sku = getSkuFromUrl();
   const optionsUIDs = getOptionsUIDsFromUrl();
 
   const [product, labels] = await Promise.all([
-    fetchProductData(sku, { optionsUIDs, skipTransform: true }).then(preloadImageMiddleware),
+    fetchProductData(sku, { optionsUIDs, skipTransform: true }).then(
+      preloadImageMiddleware
+    ),
     fetchPlaceholders(),
   ]);
 
@@ -55,6 +57,7 @@ await initializeDropin(async () => {
   const models = {
     ProductDetails: {
       initialData: { ...product },
+      transformer: (data) => data,
     },
   };
 
@@ -70,7 +73,7 @@ await initializeDropin(async () => {
 })();
 
 async function preloadImageMiddleware(data) {
-  const image = data?.images?.[0]?.url?.replace(/^https?:/, '');
+  const image = data?.images?.[0]?.url?.replace(/^https?:/, "");
 
   if (image) {
     await UI.render(Image, {
@@ -79,8 +82,8 @@ async function preloadImageMiddleware(data) {
       params: {
         ...IMAGES_SIZES,
       },
-      loading: 'eager',
-    })(document.createElement('div'));
+      loading: "eager",
+    })(document.createElement("div"));
   }
   return data;
 }
